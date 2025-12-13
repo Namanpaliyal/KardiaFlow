@@ -98,7 +98,5 @@ See: `deploy_acr.sh` and `.github/workflows/azure-acr-deploy.yml` for CI automat
 
 Create an issue or PR. For troubleshooting installation issues, include OS, Python version, and the pip error output.
 
-## License
 
-This repo has no license file. Add one if you plan to publish publicly.
 
