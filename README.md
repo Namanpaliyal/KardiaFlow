@@ -1,6 +1,8 @@
 # KardiaFlow
 
 Lightweight RAG (Retrieval-Augmented Generation) demo using FastAPI, Chroma (vector DB), Sentence-Transformers embeddings, and Ollama LLM (`gemma2:2b`). This repository contains the FastAPI app, helper deployment scripts, and CI for container-based Azure deployment.
+<img width="1783" height="892" alt="image" src="https://github.com/user-attachments/assets/1ea62918-c674-41f7-9a4e-a0f8b5cf2f11" />
+
 
 ## Contents
 
@@ -97,6 +99,7 @@ See: `deploy_acr.sh` and `.github/workflows/azure-acr-deploy.yml` for CI automat
 ## Contributing
 
 Create an issue or PR. For troubleshooting installation issues, include OS, Python version, and the pip error output.
+
 
 
 
