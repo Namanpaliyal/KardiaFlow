@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+chroma_db/
+uploads/
+.DS_Store

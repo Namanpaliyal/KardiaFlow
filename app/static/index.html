@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KardiaFlow - Medical RAG</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .upload-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f0f4ff;
+            border-radius: 5px;
+            text-align: center;
+            border: 2px dashed #667eea;
+        }
+        
+        .upload-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+        
+        .upload-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+        
+        #pdfInput {
+            display: none;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button.ask-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        button.ask-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        button.ask-btn:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            font-weight: 600;
+            padding: 20px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .results {
+            display: none;
+        }
+        
+        .results.show {
+            display: block;
+        }
+        
+        .answer-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .answer-section h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .answer-text {
+            color: #555;
+            line-height: 1.6;
+            font-size: 1.05em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .sources-section {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #764ba2;
+        }
+        
+        .sources-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .source-item {
+            background: white;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            color: #666;
+            border-left: 3px solid #764ba2;
+        }
+        
+        .source-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #c33;
+            display: none;
+            margin-bottom: 20px;
+        }
+        
+        .error.show {
+            display: block;
+        }
+        
+        .success {
+            background: #efe;
+            color: #3c3;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #3c3;
+            display: none;
+            margin-bottom: 20px;
+        }
+        
+        .success.show {
+            display: block;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 KardiaFlow</h1>
+            <p>Medical Document Q&A System</p>
+        </div>
+        
+        <div class="upload-section">
+            <button class="upload-btn" onclick="document.getElementById('pdfInput').click()">
+                📄 Upload PDF
+            </button>
+            <input type="file" id="pdfInput" accept=".pdf" onchange="handlePdfUpload(event)">
+            <p style="margin-top: 10px; color: #666; font-size: 0.9em;">Upload medical documents to get started</p>
+        </div>
+        
+        <div class="success" id="success"></div>
+        <div class="error" id="error"></div>
+        
+        <div class="input-section">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    id="questionInput" 
+                    placeholder="Ask a question about your medical documents..."
+                    onkeypress="handleKeyPress(event)"
+                >
+                <button class="ask-btn" id="askBtn" onclick="askQuestion()">Ask</button>
+            </div>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Finding answer...</p>
+        </div>
+        
+        <div class="results" id="results">
+            <div class="answer-section">
+                <h3>Answer</h3>
+                <div class="answer-text" id="answerText"></div>
+            </div>
+            
+            <div class="sources-section" id="sourcesSection" style="display:none;">
+                <h3>Source Documents</h3>
+                <div id="sourcesList"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function handlePdfUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const formData = new FormData();
+            formData.append("file", file);
+            
+            showSuccess("Uploading PDF...");
+            
+            try {
+                const response = await fetch('/api/upload-pdf', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showSuccess(`✅ ${data.message}`);
+                } else {
+                    showError(`❌ Upload failed: ${data.error}`);
+                }
+            } catch (error) {
+                showError(`❌ Upload error: ${error.message}`);
+            }
+            
+            event.target.value = '';
+        }
+        
+        async function askQuestion() {
+            const question = document.getElementById('questionInput').value.trim();
+            
+            if (!question) {
+                showError('Please enter a question');
+                return;
+            }
+            
+            const askBtn = document.getElementById('askBtn');
+            askBtn.disabled = true;
+            
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('results').classList.remove('show');
+            document.getElementById('error').classList.remove('show');
+            document.getElementById('success').classList.remove('show');
+            
+            try {
+                const response = await fetch('/api/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    showError(data.answer || `Error: ${data.error}`);
+                    return;
+                }
+                
+                document.getElementById('answerText').textContent = data.answer || 'No answer received';
+                
+                if (data.sources && data.sources.length > 0) {
+                    const sourcesList = document.getElementById('sourcesList');
+                    sourcesList.innerHTML = '';
+                    data.sources.forEach((source, index) => {
+                        const sourceEl = document.createElement('div');
+                        sourceEl.className = 'source-item';
+                        sourceEl.textContent = `${index + 1}. ${source.source}`;
+                        sourcesList.appendChild(sourceEl);
+                    });
+                    document.getElementById('sourcesSection').style.display = 'block';
+                } else {
+                    document.getElementById('sourcesSection').style.display = 'none';
+                }
+                
+                document.getElementById('results').classList.add('show');
+                document.getElementById('questionInput').value = '';
+                
+            } catch (error) {
+                showError(`Error: ${error.message}`);
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+                askBtn.disabled = false;
+            }
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                askQuestion();
+            }
+        }
+        
+        function showError(message) {
+            const errorEl = document.getElementById('error');
+            errorEl.textContent = message;
+            errorEl.classList.add('show');
+        }
+        
+        function showSuccess(message) {
+            const successEl = document.getElementById('success');
+            successEl.textContent = message;
+            successEl.classList.add('show');
+            setTimeout(() => {
+                successEl.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
